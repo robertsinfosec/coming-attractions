@@ -20,19 +20,18 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy application code
 COPY src/coming_attractions/ /app/coming_attractions/
 
-# Create non-root user
+# Create data directory for trailers (must be done as root)
+RUN mkdir -p /data/trailers
+
+# Create non-root user and set ownership
 RUN useradd -m -u 1000 trailers && \
-    chown -R trailers:trailers /app
+    chown -R trailers:trailers /app /data
 
 # Switch to non-root user
 USER trailers
 
 # Set Python path
 ENV PYTHONPATH=/app
-
-# Create data directory for trailers
-RUN mkdir -p /data/trailers && \
-    chown -R trailers:trailers /data
 
 # Working directory for trailer operations
 WORKDIR /data/trailers
