@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  coming-attractions:
+    image: ghcr.io/robertsinfosec/coming-attractions:latest
+    container_name: coming-attractions
+    restart: unless-stopped
+
+    environment:
+      # Required
+      - TMDB_API_KEY=${TMDB_API_KEY}
+
+      # Optional - General Settings
+      - TZ=America/New_York
+      - TMDB_REGION=US
+      - MODE=both # theatrical, streaming, or both
+
+      # Optional - Fetch Settings
+      - DAYS_AHEAD=180
+      - DAYS_BACK=90
+      - MAX_PAGES=5
+      - MAX_HEIGHT=1080
+
+      # Optional - Retention
+      - RETENTION_YEARS=2
+
+      # Optional - Streaming Providers (comma-separated IDs)
+      # Default includes: Netflix, Prime, Disney+, HBO Max, Hulu, Apple TV+, Paramount+, Peacock, Showtime, Starz
+      # - WATCH_PROVIDERS=8,9,337,384,15,350,531,386,37,43
+      # - WATCH_REGION=US
+      # - MEDIA_TYPES=movie,tv
+
+      # Optional - Logging
+      - LOG_TIMESTAMPS=1
+      - DEBUG=0
+      # - LOG_FILE=/data/trailers/coming-attractions.log
+
+      # Optional - Custom paths (defaults work for most cases)
+      # - OUT_DIR=/data/trailers
+      # - THEATRICAL_DIR=/data/trailers/theatrical
+      # - STREAMING_DIR=/data/trailers/streaming
+      # - REMOVED_FILE=/data/trailers/.trailer-removed.txt
+
+    volumes:
+      # Trailer storage - maps your host trailer directory to container
+      # The .trailer-removed.txt file will be created in the root of this directory
+      # Example: /opt/media/nas-data/trailers:/data/trailers
+      - /path/to/trailers:/data/trailers
+
+    # Daemon mode - runs continuously
+    command: daemon --interval 12h
+
+    # Alternative: Run individual commands
+    # command: fetch --mode theatrical
+    # command: prune --retention-years 2
+    # command: fix-titles --root-dir /data/trailers/theatrical
+# Example .env file:
+# TMDB_API_KEY=your_tmdb_api_key_here

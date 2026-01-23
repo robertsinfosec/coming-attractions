@@ -1,0 +1,90 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of coming-attractions are you running?
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: command
+    attributes:
+      label: Command
+      description: Which command are you having trouble with?
+      options:
+        - fetch
+        - prune
+        - fix-titles
+        - daemon
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this issue?
+      placeholder: |
+        1. Run command '...'
+        2. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output (use --debug for verbose logs)
+      render: shell
+    validations:
+      required: false
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: Where are you running the application?
+      options:
+        - Local (Python)
+        - Docker
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: What OS are you using?
+      placeholder: "Ubuntu 22.04, macOS 14.0, etc."
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here
+    validations:
+      required: false
