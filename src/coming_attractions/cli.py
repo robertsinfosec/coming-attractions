@@ -197,7 +197,7 @@ def fetch(
                 import traceback
 
                 traceback.print_exc()
-            sys.exit(1)
+            raise click.ClickException(str(e))
 
 
 @cli.command()
@@ -287,7 +287,7 @@ def prune(
                 import traceback
 
                 traceback.print_exc()
-            sys.exit(1)
+            raise click.ClickException(str(e))
 
 
 @cli.command()
@@ -345,7 +345,7 @@ def fix_titles(
                 import traceback
 
                 traceback.print_exc()
-            sys.exit(1)
+            raise click.ClickException(str(e))
 
 
 @cli.command()
@@ -423,83 +423,103 @@ def daemon(
             logger.info("=" * 64)
 
             # Step 1: Prune old trailers
-            logger.info("Step 1: Pruning old trailers...")
-            ctx.invoke(
-                prune,
-                retention_years=retention_years,
-                theatrical_dir=Path("./theatrical"),
-                streaming_dir=Path("./streaming"),
-                removed_file=Path("./.trailer-removed.txt"),
-                dry_run=False,
-                force=True,
-                debug=debug,
-                timestamps=timestamps,
-                log_file=log_file,
-            )
+            try:
+                logger.info("Step 1: Pruning old trailers...")
+                ctx.invoke(
+                    prune,
+                    retention_years=retention_years,
+                    theatrical_dir=Path("./theatrical"),
+                    streaming_dir=Path("./streaming"),
+                    removed_file=Path("./.trailer-removed.txt"),
+                    dry_run=False,
+                    force=True,
+                    debug=debug,
+                    timestamps=timestamps,
+                    log_file=log_file,
+                )
+            except Exception as e:
+                logger.error(f"Prune failed: {e}")
+                logger.warning("Continuing daemon cycle despite error...")
 
             _countdown_sleep(5, "Waiting before fetching")
 
             # Step 2: Fetch theatrical trailers
-            logger.info("Step 2: Fetching theatrical trailers...")
-            ctx.invoke(
-                fetch,
-                api_key=api_key,
-                mode="theatrical",
-                region=os.environ.get("TMDB_REGION", "US"),
-                out_dir=Path("/data/trailers/theatrical"),
-                days_ahead=180,
-                days_back=90,
-                max_pages=5,
-                max_height=1080,
-                dry_run=False,
-                debug=debug,
-                timestamps=timestamps,
-                log_file=log_file,
-            )
+            try:
+                logger.info("Step 2: Fetching theatrical trailers...")
+                ctx.invoke(
+                    fetch,
+                    api_key=api_key,
+                    mode="theatrical",
+                    region=os.environ.get("TMDB_REGION", "US"),
+                    out_dir=Path("/data/trailers/theatrical"),
+                    days_ahead=180,
+                    days_back=90,
+                    max_pages=5,
+                    max_height=1080,
+                    dry_run=False,
+                    debug=debug,
+                    timestamps=timestamps,
+                    log_file=log_file,
+                )
+            except Exception as e:
+                logger.error(f"Theatrical fetch failed: {e}")
+                logger.warning("Continuing daemon cycle despite error...")
 
             _countdown_sleep(metadata_wait, "Waiting for Jellyfin metadata")
 
             # Step 3: Fix theatrical titles
-            logger.info("Step 3: Fixing theatrical titles...")
-            ctx.invoke(
-                fix_titles,
-                root_dir=Path("/data/trailers/theatrical"),
-                prefix="Trailer - ",
-                debug=debug,
-                timestamps=timestamps,
-                log_file=log_file,
-            )
+            try:
+                logger.info("Step 3: Fixing theatrical titles...")
+                ctx.invoke(
+                    fix_titles,
+                    root_dir=Path("/data/trailers/theatrical"),
+                    prefix="Trailer - ",
+                    debug=debug,
+                    timestamps=timestamps,
+                    log_file=log_file,
+                )
+            except Exception as e:
+                logger.error(f"Theatrical title fix failed: {e}")
+                logger.warning("Continuing daemon cycle despite error...")
 
             # Step 4: Fetch streaming trailers
-            logger.info("Step 4: Fetching streaming trailers...")
-            ctx.invoke(
-                fetch,
-                api_key=api_key,
-                mode="streaming",
-                region=os.environ.get("TMDB_REGION", "US"),
-                out_dir=Path("/data/trailers/streaming"),
-                days_ahead=180,
-                days_back=90,
-                max_pages=5,
-                max_height=1080,
-                dry_run=False,
-                debug=debug,
-                timestamps=timestamps,
-                log_file=log_file,
-            )
+            try:
+                logger.info("Step 4: Fetching streaming trailers...")
+                ctx.invoke(
+                    fetch,
+                    api_key=api_key,
+                    mode="streaming",
+                    region=os.environ.get("TMDB_REGION", "US"),
+                    out_dir=Path("/data/trailers/streaming"),
+                    days_ahead=180,
+                    days_back=90,
+                    max_pages=5,
+                    max_height=1080,
+                    dry_run=False,
+                    debug=debug,
+                    timestamps=timestamps,
+                    log_file=log_file,
+                )
+            except Exception as e:
+                logger.error(f"Streaming fetch failed: {e}")
+                logger.warning("Continuing daemon cycle despite error...")
 
             _countdown_sleep(metadata_wait, "Waiting for Jellyfin metadata")
 
             # Step 5: Fix streaming titles
-            logger.info("Step 5: Fixing streaming titles...")
-            ctx.invoke(
-                fix_titles,
-                root_dir=Path("/data/trailers/streaming"),
-                prefix="Trailer - ",
-                debug=debug,
-                timestamps=timestamps,
-                log_file=log_file,
-            )
+            try:
+                logger.info("Step 5: Fixing streaming titles...")
+                ctx.invoke(
+                    fix_titles,
+                    root_dir=Path("/data/trailers/streaming"),
+                    prefix="Trailer - ",
+                    debug=debug,
+                    timestamps=timestamps,
+                    log_file=log_file,
+                )
+            except Exception as e:
+                logger.error(f"Streaming title fix failed: {e}")
+                logger.warning("Continuing daemon cycle despite error...")
 
             # Sleep until next cycle
             logger.success(f"Daemon cycle complete. Sleeping for {interval}...")

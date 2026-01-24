@@ -318,7 +318,7 @@ class TestFixTitlesCommand:
 class TestDaemonCommand:
     """Tests for daemon command."""
 
-    @patch("coming_attractions.cli.time.sleep")
+    @patch("coming_attractions.cli._countdown_sleep")
     @patch("coming_attractions.cli.TrailerFetcher")
     @patch("coming_attractions.cli.TrailerPruner")
     @patch("coming_attractions.cli.TitleFixer")
@@ -327,7 +327,7 @@ class TestDaemonCommand:
         mock_fixer_class,
         mock_pruner_class,
         mock_fetcher_class,
-        mock_sleep,
+        mock_countdown_sleep,
         tmp_path,
         valid_api_key,
     ):
@@ -347,18 +347,23 @@ class TestDaemonCommand:
         mock_fixer.fix.return_value = TitleFixStats()
         mock_fixer_class.return_value = mock_fixer
 
-        # Make sleep raise to exit after first iteration
-        mock_sleep.side_effect = KeyboardInterrupt()
+        # Make countdown_sleep raise on the final interval sleep to exit
+        def side_effect(seconds, message=""):
+            if seconds == 7200:  # The final interval sleep
+                raise KeyboardInterrupt()
+        
+        mock_countdown_sleep.side_effect = side_effect
 
         runner = CliRunner()
         result = runner.invoke(
             cli, ["daemon", "--api-key", valid_api_key, "--interval", "2h"]
         )
 
-        # Should parse 2h = 7200 seconds
+        # Should parse 2h = 7200 seconds and pass it to countdown_sleep
         assert result.exit_code == 0
-        if mock_sleep.called:
-            assert mock_sleep.call_args[0][0] == 7200
+        # Check that countdown_sleep was called with 7200
+        calls = [call[0][0] for call in mock_countdown_sleep.call_args_list]
+        assert 7200 in calls
 
     @patch("coming_attractions.cli.time.sleep")
     @patch("coming_attractions.cli.TrailerFetcher")
@@ -408,6 +413,7 @@ class TestDaemonCommand:
         assert result.exit_code != 0
         assert "Invalid interval" in result.output
 
+    @patch("coming_attractions.cli._countdown_sleep")
     @patch("coming_attractions.cli.TrailerFetcher")
     @patch("coming_attractions.cli.TrailerPruner")
     @patch("coming_attractions.cli.TitleFixer")
@@ -416,6 +422,7 @@ class TestDaemonCommand:
         mock_fixer_class,
         mock_pruner_class,
         mock_fetcher_class,
+        mock_countdown_sleep,
         tmp_path,
         valid_api_key,
     ):
@@ -431,18 +438,27 @@ class TestDaemonCommand:
         mock_fixer.fix.return_value = TitleFixStats()
         mock_fixer_class.return_value = mock_fixer
 
-        # Mock fetcher to fail once then raise to exit
+        # Mock fetcher to fail on all calls
         mock_fetcher = MagicMock()
-        mock_fetcher.fetch.side_effect = [
-            Exception("Network error"),
-            KeyboardInterrupt(),  # Exit after retry
-        ]
+        mock_fetcher.fetch.side_effect = Exception("Network error")
         mock_fetcher_class.return_value = mock_fetcher
+
+        # Let countdown_sleep work a few times, then raise to exit
+        call_count = [0]
+        def countdown_side_effect(seconds, message=""):
+            call_count[0] += 1
+            if call_count[0] >= 3:  # After a few countdowns, exit
+                raise KeyboardInterrupt()
+        
+        mock_countdown_sleep.side_effect = countdown_side_effect
 
         runner = CliRunner()
         result = runner.invoke(cli, ["daemon", "--api-key", valid_api_key])
 
-        # Should complete both iterations
+        # Should handle the error and exit gracefully
+        assert result.exit_code == 0
+        # Verify fetcher was called (even though it failed)
+        assert mock_fetcher.fetch.called
         assert result.exit_code == 0
 
 
