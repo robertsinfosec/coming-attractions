@@ -335,28 +335,25 @@ def fix_titles(
     log_file: Optional[str],
 ):
     """Add 'Trailer - ' prefix to movie titles in NFO files."""
-    logger = _create_logger(debug, timestamps, log_file)
+    with _create_logger(debug, timestamps, log_file) as logger:
+        try:
+            config = TitleFixConfig(
+                root_dir=root_dir,
+                prefix=prefix,
+            )
 
-    try:
-        config = TitleFixConfig(
-            root_dir=root_dir,
-            prefix=prefix,
-        )
+            fixer = TitleFixer(config, logger)
+            fixer.fix_titles()
 
-        fixer = TitleFixer(config, logger)
-        fixer.fix_titles()
+            sys.exit(0)
 
-        sys.exit(0)
+        except Exception as e:
+            logger.error(f"Fatal error: {e}")
+            if debug:
+                import traceback
 
-    except Exception as e:
-        logger.error(f"Fatal error: {e}")
-        if debug:
-            import traceback
-
-            traceback.print_exc()
-        sys.exit(1)
-    finally:
-        logger.close()
+                traceback.print_exc()
+            sys.exit(1)
 
 
 @cli.command()
