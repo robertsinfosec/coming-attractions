@@ -1,11 +1,15 @@
 # Multi-stage build for coming-attractions
 FROM python:3.14-slim as builder
 
-# Metadata labels
+# OCI Image Metadata Labels
+# https://github.com/opencontainers/image-spec/blob/main/annotations.md
 LABEL org.opencontainers.image.title="Coming Attractions" \
       org.opencontainers.image.description="Automated movie trailer fetcher and manager for Plex/Jellyfin. Downloads trailers from TMDb/YouTube with configurable retention policies." \
+      org.opencontainers.image.authors="robertsinfosec" \
       org.opencontainers.image.vendor="robertsinfosec" \
+      org.opencontainers.image.url="https://github.com/robertsinfosec/coming-attractions" \
       org.opencontainers.image.source="https://github.com/robertsinfosec/coming-attractions" \
+      org.opencontainers.image.documentation="https://github.com/robertsinfosec/coming-attractions/blob/main/README.md" \
       org.opencontainers.image.licenses="MIT"
 
 # Install system dependencies in single layer
