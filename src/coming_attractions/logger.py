@@ -140,8 +140,15 @@ class Logger:
         if self._file_handle:
             try:
                 self._file_handle.close()
-            except (OSError, IOError):
-                pass
+            except (OSError, IOError) as e:
+                # Warn but do not raise: logger shutdown errors should not
+                # disrupt normal program termination.
+                print(
+                    f"{LogLevel.ERROR.value[2]}[-] WARNING: Could not close log file "
+                    f"{self.log_file}: {e}{self.C_RESET}",
+                    file=sys.stderr,
+                    flush=True,
+                )
             self._file_handle = None
 
     def __enter__(self):
