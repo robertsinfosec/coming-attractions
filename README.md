@@ -5,7 +5,7 @@
 This project gets upcoming TV and movie trailers from TMDb and YouTube, downloads them, and manages them for use with Jellyfin media servers. It supports both theatrical releases and streaming content from popular providers like Netflix, Prime Video, Disney+, and more.
 
 > [!NOTE]
-> This is different from "[Trailfin](https://github.com/Pukabyte/trailerfin)". Trailerfin associates the streaming trailer for the movie or TV series that is already in your library. If the stream file is there, then you see Trailer icon for *existing* movies in your library (in Jellyfin, for example):
+> This is different from "[Trailerfin](https://github.com/Pukabyte/trailerfin)". Trailerfin associates the streaming trailer for the movie or TV series that is already in your library. If the stream file is there, then you see Trailer icon for *existing* movies in your library (in Jellyfin, for example):
 >
 > > ![alt text](docs/images/example-trailerfin.png)
 >  
