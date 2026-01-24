@@ -172,35 +172,34 @@ def fetch(
     log_file: Optional[str],
 ):
     """Fetch upcoming trailers from TMDb and YouTube."""
-    logger = _create_logger(debug, timestamps, log_file)
+    with _create_logger(debug, timestamps, log_file) as logger:
 
-    try:
-        config = FetchConfig(
-            api_key=api_key,
-            mode=mode,
-            region=region,
-            out_dir=out_dir,
-            days_ahead=days_ahead,
-            days_back=days_back,
-            max_pages=max_pages,
-            max_height=max_height,
-            dry_run=dry_run,
-        )
+        try:
+            config = FetchConfig(
+                api_key=api_key,
+                mode=mode,
+                region=region,
+                out_dir=out_dir,
+                days_ahead=days_ahead,
+                days_back=days_back,
+                max_pages=max_pages,
+                max_height=max_height,
+                dry_run=dry_run,
+            )
 
-        fetcher = TrailerFetcher(config, logger)
-        fetcher.fetch()
+            fetcher = TrailerFetcher(config, logger)
+            fetcher.fetch()
 
-        sys.exit(0)
+            sys.exit(0)
 
-    except Exception as e:
-        logger.error(f"Fatal error: {e}")
-        if debug:
-            import traceback
+        except Exception as e:
+            logger.error(f"Fatal error: {e}")
+            if debug:
+                import traceback
 
-            traceback.print_exc()
-        sys.exit(1)
-    finally:
-        logger.close()
+                traceback.print_exc()
+            sys.exit(1)
+
 
 
 @cli.command()
