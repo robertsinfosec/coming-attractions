@@ -351,7 +351,7 @@ class TestDaemonCommand:
         def side_effect(seconds, message=""):
             if seconds == 7200:  # The final interval sleep
                 raise KeyboardInterrupt()
-        
+
         mock_countdown_sleep.side_effect = side_effect
 
         runner = CliRunner()
@@ -445,11 +445,12 @@ class TestDaemonCommand:
 
         # Let countdown_sleep work a few times, then raise to exit
         call_count = [0]
+
         def countdown_side_effect(seconds, message=""):
             call_count[0] += 1
             if call_count[0] >= 3:  # After a few countdowns, exit
                 raise KeyboardInterrupt()
-        
+
         mock_countdown_sleep.side_effect = countdown_side_effect
 
         runner = CliRunner()
