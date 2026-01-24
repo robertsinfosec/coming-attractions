@@ -4,18 +4,18 @@
 
 A professional Python application for fetching, managing, and maintaining upcoming movie trailers for Jellyfin media servers. Automatically downloads trailers from TMDb and YouTube, manages retention policies, and fixes metadata for proper Jellyfin display.
 
-[![CI](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci.yml)
-[![tests](https://img.shields.io/github/actions/workflow/status/robertsinfosec/coming-attractions/ci.yml?branch=main&label=tests&logo=githubactions&logoColor=white)](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci.yml)
-[![coverage](https://codecov.io/gh/robertsinfosec/coming-attractions/branch/main/graph/badge.svg)](https://codecov.io/gh/robertsinfosec/coming-attractions)
-[![CodeQL](https://github.com/robertsinfosec/coming-attractions/actions/workflows/security.yml/badge.svg?branch=main)](https://github.com/robertsinfosec/coming-attractions/actions/workflows/security.yml)
-[![Docker Build](https://github.com/robertsinfosec/coming-attractions/actions/workflows/build.yml/badge.svg)](https://github.com/robertsinfosec/coming-attractions/actions/workflows/build.yml)
+[![CI/CD](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci-cd.yml)
+[![tests](https://img.shields.io/github/actions/workflow/status/robertsinfosec/coming-attractions/ci-cd.yml?branch=main&label=tests&logo=githubactions&logoColor=white)](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci-cd.yml)
+[![codecov](https://codecov.io/gh/robertsinfosec/coming-attractions/branch/main/graph/badge.svg?token=80%25)](https://codecov.io/gh/robertsinfosec/coming-attractions)
+[![CodeQL](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/robertsinfosec/coming-attractions/security/code-scanning)
+[![Docker Build](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/robertsinfosec/coming-attractions/pkgs/container/coming-attractions)
 [![ghcr.io](https://img.shields.io/badge/ghcr.io-published-blue?logo=docker&logoColor=white)](https://github.com/robertsinfosec/coming-attractions/pkgs/container/coming-attractions)
 [![python](https://img.shields.io/badge/python-3.11%2B-blue?logo=python&logoColor=white)](https://github.com/robertsinfosec/coming-attractions/blob/main/src/setup.py)
-[![license](https://img.shields.io/github/license/robertsinfosec/coming-attractions?label=license)](https://github.com/robertsinfosec/coming-attractions/blob/main/LICENSE)
-[![last commit](https://img.shields.io/github/last-commit/robertsinfosec/coming-attractions?label=last%20commit)](https://github.com/robertsinfosec/coming-attractions/commits/main)
-[![issues](https://img.shields.io/github/issues/robertsinfosec/coming-attractions?label=issues)](https://github.com/robertsinfosec/coming-attractions/issues)
-[![PRs](https://img.shields.io/github/issues-pr/robertsinfosec/coming-attractions?label=pull%20requests)](https://github.com/robertsinfosec/coming-attractions/pulls)
-[![Dependabot](https://img.shields.io/badge/dependabot-enabled-025E8C?logo=dependabot&logoColor=white)](https://github.com/robertsinfosec/coming-attractions/security/dependabot)
+[![license](https://img.shields.io/github/license/robertsinfosec/coming-attractions?label=license&logo=opensourceinitiative&logoColor=white&color=MIT)](https://github.com/robertsinfosec/coming-attractions/blob/main/LICENSE)
+[![last commit](https://img.shields.io/github/last-commit/robertsinfosec/coming-attractions?label=last%20commit&logo=git&logoColor=white&color=today)](https://github.com/robertsinfosec/coming-attractions/commits/main)
+[![issues](https://img.shields.io/github/issues/robertsinfosec/coming-attractions?label=issues&logo=github&logoColor=white&color=0%20open)](https://github.com/robertsinfosec/coming-attractions/issues)
+[![pull requests](https://img.shields.io/github/issues-pr/robertsinfosec/coming-attractions?label=pull%20requests&logo=github&logoColor=white&color=0%20open)](https://github.com/robertsinfosec/coming-attractions/pulls)
+[![dependabot](https://img.shields.io/badge/dependabot-enabled-025E8C?logo=dependabot&logoColor=white)](https://github.com/robertsinfosec/coming-attractions/security/dependabot)
 
 ## Features
 
