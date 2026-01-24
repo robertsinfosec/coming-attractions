@@ -3,7 +3,6 @@
 from datetime import date, timedelta
 from unittest.mock import MagicMock, patch
 
-
 from coming_attractions.config import FetchConfig
 from coming_attractions.fetcher import TrailerFetcher
 
