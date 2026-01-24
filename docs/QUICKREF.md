@@ -81,23 +81,22 @@ coming-attractions fix-titles \
 ### Daemon Mode
 
 ```bash
-# Run all tasks on schedule
+# Run daemon with default 12h interval
 coming-attractions daemon \
   --api-key YOUR_API_KEY \
-  --mode theatrical \
-  --out-dir /data/trailers/theatrical \
-  --fetch-interval 12h \
-  --prune-interval 1d \
-  --fix-interval 1d
+  --interval 12h
 
-# Run specific tasks only
+# Custom metadata wait time (default: 300s / 5min)
 coming-attractions daemon \
   --api-key YOUR_API_KEY \
-  --mode theatrical \
-  --out-dir /data/trailers/theatrical \
-  --enable-fetch \
-  --disable-prune \
-  --disable-fix
+  --interval 12h \
+  --metadata-wait 600
+
+# Custom retention period
+coming-attractions daemon \
+  --api-key YOUR_API_KEY \
+  --interval 6h \
+  --retention-years 3
 ```
 
 ## Environment Variables
@@ -116,6 +115,11 @@ export DAYS_BACK=90
 export RETENTION_YEARS=2
 export THEATRICAL_DIR=/data/trailers/theatrical
 export STREAMING_DIR=/data/trailers/streaming
+
+# Daemon settings
+export METADATA_WAIT_SECONDS=300  # Wait 5 minutes for Jellyfin metadata (default)
+export LOG_TIMESTAMPS=1
+export DEBUG=0
 
 # Run commands
 coming-attractions fetch
@@ -157,17 +161,23 @@ version: '3.8'
 
 services:
   coming-attractions:
-    image: coming-attractions:latest
+    image: ghcr.io/robertsinfosec/coming-attractions:latest
     container_name: coming-attractions
     restart: unless-stopped
     volumes:
-      - /path/to/trailers:/data
+      - /path/to/trailers:/data/trailers
+      - ./config:/config
     environment:
+      - TZ=America/New_York
       - TMDB_API_KEY=your_api_key_here
-      - MODE=theatrical
-      - OUT_DIR=/data/trailers
+      - TMDB_REGION=US
       - RETENTION_YEARS=2
-    command: daemon --fetch-interval 12h --prune-interval 1d
+      - DAYS_AHEAD=365
+      - DAYS_BACK=180
+      - MAX_HEIGHT=1080
+      - METADATA_WAIT_SECONDS=300  # Wait 5 min for Jellyfin metadata
+      - LOG_TIMESTAMPS=1
+    command: daemon --interval 12h
 ```
 
 ## Cron Examples

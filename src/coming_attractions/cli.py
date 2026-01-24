@@ -357,8 +357,9 @@ def fix_titles(
 @click.option(
     "--metadata-wait",
     type=int,
-    default=lambda: env_or_option_int("METADATA_WAIT_SECONDS", None, 300),
-    help="Seconds to wait for Jellyfin metadata population",
+    default=300,
+    envvar="METADATA_WAIT_SECONDS",
+    help="Seconds to wait for Jellyfin metadata population (default: 300s / 5min)",
 )
 @click.option(
     "--retention-years",
@@ -413,7 +414,7 @@ def daemon(
         sys.exit(1)
 
     logger.info(f"Starting daemon mode with {interval} ({interval_seconds}s) interval")
-    logger.info(f"Metadata wait: {metadata_wait}s")
+    logger.info(f"Metadata wait: {metadata_wait}s ({metadata_wait // 60}min)")
     logger.info(f"Retention: {retention_years} years")
 
     try:
@@ -465,6 +466,9 @@ def daemon(
                 logger.error(f"Theatrical fetch failed: {e}")
                 logger.warning("Continuing daemon cycle despite error...")
 
+            logger.info(
+                f"Sleeping for {metadata_wait}s to allow Jellyfin to populate metadata..."
+            )
             _countdown_sleep(metadata_wait, "Waiting for Jellyfin metadata")
 
             # Step 3: Fix theatrical titles
@@ -504,6 +508,9 @@ def daemon(
                 logger.error(f"Streaming fetch failed: {e}")
                 logger.warning("Continuing daemon cycle despite error...")
 
+            logger.info(
+                f"Sleeping for {metadata_wait}s to allow Jellyfin to populate metadata..."
+            )
             _countdown_sleep(metadata_wait, "Waiting for Jellyfin metadata")
 
             # Step 5: Fix streaming titles

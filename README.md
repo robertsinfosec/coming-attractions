@@ -74,6 +74,7 @@ services:
       - DAYS_AHEAD=180
       - DAYS_BACK=90
       - MAX_HEIGHT=1080
+      - METADATA_WAIT_SECONDS=300  # Wait 5 min for Jellyfin metadata (default)
       - LOG_TIMESTAMPS=1
     volumes:
       - /path/to/trailers:/data/trailers
@@ -229,10 +230,10 @@ Options:
 **Workflow:**
 1. Prune old trailers (retention policy)
 2. Fetch theatrical trailers
-3. Wait for Jellyfin metadata (5 min default)
-4. Fix theatrical titles
+3. **Wait for Jellyfin metadata** (default: 5 min) - Allows Jellyfin to detect new files and generate NFO metadata
+4. Fix theatrical titles (adds "Trailer - " prefix to NFO files)
 5. Fetch streaming trailers
-6. Wait for Jellyfin metadata
+6. **Wait for Jellyfin metadata** (default: 5 min)
 7. Fix streaming titles
 8. Sleep for configured interval
 9. Repeat
