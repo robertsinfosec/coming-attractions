@@ -1,0 +1,235 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - "v*"
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run CodeQL weekly on Mondays at 00:00 UTC
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+# Limit concurrent workflow runs per PR/branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+  actions: read
+
+jobs:
+  # ============================================================================
+  # Phase 1: Quality Checks (run in parallel)
+  # ============================================================================
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e src/
+          pip install ruff mypy
+
+      - name: Lint with ruff
+        run: |
+          cd src
+          ruff check coming_attractions/ tests/
+
+      - name: Type check with mypy
+        run: |
+          cd src
+          mypy coming_attractions/ --ignore-missing-imports
+        continue-on-error: true # Don't fail build on type errors yet
+
+  test:
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e src/
+
+      - name: Run tests with coverage
+        run: |
+          cd src
+          pytest --cov=coming_attractions --cov-report=xml --cov-report=term -v
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          file: src/coverage.xml
+          flags: unittests
+          name: python-${{ matrix.python-version }}
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  security:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["python"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended,security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v4
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"
+
+  # ============================================================================
+  # Phase 2: Docker Build Test (PRs only)
+  # ============================================================================
+
+  docker-build-test:
+    name: Docker Build Test
+    needs: [lint, test]
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: src/docker/Dockerfile
+          platforms: linux/amd64
+          push: false
+          tags: coming-attractions:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ============================================================================
+  # Phase 3: Docker Build & Publish (main branch only)
+  # ============================================================================
+
+  docker-publish:
+    name: Build & Publish Docker Images
+    needs: [lint, test, security]
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://github.com/robertsinfosec/coming-attractions/pkgs/container/coming-attractions
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate datetime version
+        id: datetime
+        run: |
+          # Format: YY.MMD.HHMM (e.g., 26.123.1301 for Jan 23 at 1:01pm)
+          # Month and Hour: no leading zeros
+          # Day and Minute: leading zeros
+          VERSION=$(date -u +'%y.%-m%d.%-H%M')
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Generated version: ${VERSION}"
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,value=${{ steps.datetime.outputs.version }},enable={{is_default_branch}}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: src/docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ============================================================================
+  # Phase 4: Cleanup (always runs after publish attempt)
+  # ============================================================================
+
+  cleanup:
+    name: Cleanup Untagged Images
+    needs: [docker-publish]
+    if: always() && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Delete untagged images
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: "coming-attractions"
+          package-type: "container"
+          min-versions-to-keep: 0
+          delete-only-untagged-versions: true
