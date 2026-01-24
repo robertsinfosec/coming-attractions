@@ -268,32 +268,29 @@ def prune(
     log_file: Optional[str],
 ):
     """Remove trailers older than retention period."""
-    logger = _create_logger(debug, timestamps, log_file)
+    with _create_logger(debug, timestamps, log_file) as logger:
+        try:
+            config = PruneConfig(
+                retention_years=retention_years,
+                theatrical_dir=theatrical_dir,
+                streaming_dir=streaming_dir,
+                removed_file=removed_file,
+                dry_run=dry_run,
+                force=force,
+            )
 
-    try:
-        config = PruneConfig(
-            retention_years=retention_years,
-            theatrical_dir=theatrical_dir,
-            streaming_dir=streaming_dir,
-            removed_file=removed_file,
-            dry_run=dry_run,
-            force=force,
-        )
+            pruner = TrailerPruner(config, logger)
+            pruner.prune()
 
-        pruner = TrailerPruner(config, logger)
-        pruner.prune()
+            sys.exit(0)
 
-        sys.exit(0)
+        except Exception as e:
+            logger.error(f"Fatal error: {e}")
+            if debug:
+                import traceback
 
-    except Exception as e:
-        logger.error(f"Fatal error: {e}")
-        if debug:
-            import traceback
-
-            traceback.print_exc()
-        sys.exit(1)
-    finally:
-        logger.close()
+                traceback.print_exc()
+            sys.exit(1)
 
 
 @cli.command()
