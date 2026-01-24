@@ -189,8 +189,7 @@ def fetch(
 
             fetcher = TrailerFetcher(config, logger)
             fetcher.fetch()
-
-            sys.exit(0)
+            # Don't call sys.exit() - let command return naturally
 
         except Exception as e:
             logger.error(f"Fatal error: {e}")
@@ -199,7 +198,6 @@ def fetch(
 
                 traceback.print_exc()
             sys.exit(1)
-
 
 
 @cli.command()
@@ -281,8 +279,7 @@ def prune(
 
             pruner = TrailerPruner(config, logger)
             pruner.prune()
-
-            sys.exit(0)
+            # Don't call sys.exit() - let command return naturally
 
         except Exception as e:
             logger.error(f"Fatal error: {e}")
@@ -340,8 +337,7 @@ def fix_titles(
 
             fixer = TitleFixer(config, logger)
             fixer.fix_titles()
-
-            sys.exit(0)
+            # Don't call sys.exit() - let command return naturally
 
         except Exception as e:
             logger.error(f"Fatal error: {e}")
