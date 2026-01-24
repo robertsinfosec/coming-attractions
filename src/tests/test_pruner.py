@@ -1,8 +1,5 @@
 """Tests for pruner."""
 
-import pytest
-from pathlib import Path
-from datetime import date, timedelta
 
 from coming_attractions.pruner import TrailerPruner
 from coming_attractions.config import PruneConfig

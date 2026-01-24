@@ -10,7 +10,6 @@ import click
 
 from coming_attractions import __version__
 from coming_attractions.config import (
-    DaemonConfig,
     FetchConfig,
     PruneConfig,
     TitleFixConfig,
@@ -189,7 +188,7 @@ def fetch(
         )
 
         fetcher = TrailerFetcher(config, logger)
-        stats = fetcher.fetch()
+        fetcher.fetch()
 
         sys.exit(0)
 
@@ -283,7 +282,7 @@ def prune(
         )
 
         pruner = TrailerPruner(config, logger)
-        stats = pruner.prune()
+        pruner.prune()
 
         sys.exit(0)
 
@@ -345,7 +344,7 @@ def fix_titles(
         )
 
         fixer = TitleFixer(config, logger)
-        stats = fixer.fix_titles()
+        fixer.fix_titles()
 
         sys.exit(0)
 

@@ -1,7 +1,6 @@
 """Title fixing logic - adds 'Trailer - ' prefix to NFO titles."""
 
 import os
-import re
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -106,7 +105,7 @@ class TitleFixer:
             self.logger.success(f"  Updated title: '{new_title}'", indent=2)
             self.stats.fixed += 1
         else:
-            self.logger.error(f"  Failed to update title", indent=2)
+            self.logger.error("  Failed to update title", indent=2)
             self.stats.failed += 1
     
     def _extract_title(self, nfo_path: Path) -> str | None:

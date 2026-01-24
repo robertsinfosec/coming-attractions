@@ -1,7 +1,6 @@
 """Tests for title fixer."""
 
 import pytest
-from pathlib import Path
 from xml.etree import ElementTree as ET
 
 from coming_attractions.title_fixer import TitleFixer

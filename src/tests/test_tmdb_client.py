@@ -1,8 +1,6 @@
 """Tests for TMDb client."""
 
-import pytest
 import responses
-from requests.exceptions import RequestException
 
 from coming_attractions.tmdb_client import TMDbClient
 

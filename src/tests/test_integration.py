@@ -1,17 +1,11 @@
 """Integration tests for end-to-end workflows."""
 
 from datetime import date, timedelta
-from pathlib import Path
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, patch
 
-import pytest
-import responses
 
-from coming_attractions.cli import cli
 from coming_attractions.config import FetchConfig
 from coming_attractions.fetcher import TrailerFetcher
-from coming_attractions.logger import Logger
-from coming_attractions.models import MediaType
 
 
 class TestFetcherIntegration:
@@ -378,7 +372,7 @@ class TestFetcherIntegration:
         )
 
         fetcher = TrailerFetcher(config, logger)
-        stats = fetcher.fetch()
+        fetcher.fetch()
 
         # Should NOT download in dry-run
         assert not mock_yt.download.called

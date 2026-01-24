@@ -3,9 +3,9 @@
 import os
 import re
 import unicodedata
-from datetime import date, datetime
+from datetime import date
 from pathlib import Path
-from typing import Optional, Set
+from typing import Set
 
 
 def sanitize_folder_name(name: str, max_length: int = 200) -> str:

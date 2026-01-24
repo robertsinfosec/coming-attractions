@@ -2,7 +2,6 @@
 
 from unittest.mock import MagicMock, patch
 
-import pytest
 from click.testing import CliRunner
 
 from coming_attractions import __version__
@@ -275,7 +274,7 @@ class TestFixTitlesCommand:
         mock_fixer_class.return_value = mock_instance
         mock_stats = MagicMock()
         mock_stats.updated = 5
-        mock_instance.fix.return_value = mock_stats
+        mock_instance.fix_titles.return_value = mock_stats
 
         runner = CliRunner()
         result = runner.invoke(
@@ -288,7 +287,7 @@ class TestFixTitlesCommand:
         )
 
         assert result.exit_code == 0
-        mock_instance.fix.assert_called_once()
+        mock_instance.fix_titles.assert_called_once()
 
     @patch("coming_attractions.cli.TitleFixer")
     def test_fix_titles_custom_prefix(self, mock_fixer_class, tmp_path):
@@ -503,8 +502,8 @@ class TestEnvironmentVariables:
         assert result.exit_code == 0
 
 
-class TestPruneCommand:
-    """Tests for prune command."""
+class TestPruneCommandExtended:
+    """Extended tests for prune command."""
 
     @patch("coming_attractions.cli.TrailerPruner")
     def test_prune_dry_run(self, mock_pruner_class, tmp_path):
@@ -540,8 +539,8 @@ class TestPruneCommand:
         mock_instance.prune.assert_called_once()
 
 
-class TestFixTitlesCommand:
-    """Tests for fix-titles command."""
+class TestFixTitlesCommandExtended:
+    """Extended tests for fix-titles command."""
 
     @patch("coming_attractions.cli.TitleFixer")
     def test_fix_titles(self, mock_fixer_class, tmp_path):
@@ -568,8 +567,8 @@ class TestFixTitlesCommand:
         mock_instance.fix_titles.assert_called_once()
 
 
-class TestEnvironmentVariables:
-    """Tests for environment variable support."""
+class TestEnvironmentVariablesExtended:
+    """Extended tests for environment variable support."""
 
     @patch("coming_attractions.cli.TrailerFetcher")
     def test_api_key_from_env(self, mock_fetcher_class, tmp_path):

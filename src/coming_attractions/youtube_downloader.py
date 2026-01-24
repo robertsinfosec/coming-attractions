@@ -84,7 +84,7 @@ class YouTubeDownloader:
             try:
                 self.logger.debug(f"yt-dlp attempt {attempt + 1}/{retries}")
 
-                result = subprocess.run(
+                subprocess.run(
                     cmd,
                     check=True,
                     stdout=subprocess.DEVNULL,

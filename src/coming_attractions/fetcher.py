@@ -5,11 +5,11 @@ import shutil
 import time
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set
 
 from coming_attractions.config import FetchConfig
 from coming_attractions.logger import Logger
-from coming_attractions.models import FetchStats, MediaType, SkipReason, Trailer
+from coming_attractions.models import FetchStats, SkipReason
 from coming_attractions.tmdb_client import TMDbClient
 from coming_attractions.utils import (
     load_removed_trailers,

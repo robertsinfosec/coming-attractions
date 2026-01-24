@@ -1,15 +1,13 @@
 """Tests for trailer fetcher."""
 
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from pathlib import Path
 from unittest.mock import MagicMock, Mock, patch
 
 import pytest
-import responses
 
 from coming_attractions.config import FetchConfig
 from coming_attractions.fetcher import TrailerFetcher
-from coming_attractions.logger import Logger
 from coming_attractions.models import FetchStats, MediaType, SkipReason
 
 
@@ -120,7 +118,6 @@ class TestInDateWindow:
 
     def test_date_within_window(self, tmp_path, logger, valid_api_key):
         """Test date within configured window."""
-        from datetime import date, timedelta
 
         config = FetchConfig(
             api_key=valid_api_key, out_dir=tmp_path, days_ahead=365, days_back=90
@@ -138,7 +135,6 @@ class TestInDateWindow:
 
     def test_date_outside_window(self, tmp_path, logger, valid_api_key):
         """Test date outside configured window."""
-        from datetime import date, timedelta
 
         config = FetchConfig(
             api_key=valid_api_key, out_dir=tmp_path, days_ahead=30, days_back=30
