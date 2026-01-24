@@ -221,8 +221,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          annotations: |
-            manifest:${{ steps.meta.outputs.annotations }}
-            index:${{ steps.meta.outputs.annotations }}
+          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=Automated movie trailer fetcher and manager for Plex/Jellyfin. Downloads trailers from TMDb/YouTube with configurable retention policies.,annotation-index.org.opencontainers.image.source=https://github.com/robertsinfosec/coming-attractions,annotation-index.org.opencontainers.image.licenses=MIT
           cache-from: type=gha
           cache-to: type=gha,mode=max
