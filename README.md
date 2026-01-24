@@ -1,8 +1,15 @@
 # Coming Attractions
 
-**Automated Jellyfin Upcoming Movie Trailer Management**
+**Get Streaming and Theatrical Trailers for Jellyfin/Emby/Plex**
 
-A professional Python application for fetching, managing, and maintaining upcoming movie trailers for Jellyfin media servers. Automatically downloads trailers from TMDb and YouTube, manages retention policies, and fixes metadata for proper Jellyfin display.
+This project gets upcoming TV and movie trailers from TMDb and YouTube, downloads them, and manages them for use with Jellyfin media servers. It supports both theatrical releases and streaming content from popular providers like Netflix, Prime Video, Disney+, and more.
+
+> [!NOTE]
+> This is different from "[Trailfin](https://github.com/Pukabyte/trailerfin)". Trailerfin associates the streaming trailer for the movie or TV series that is already in your library. If the stream file is there, then you see Trailer icon for *existing* movies in your library (in Jellyfin, for example):
+>
+> > ![alt text](docs/images/example-trailerfin.png)
+>  
+> With this Coming Attractions fetches upcoming trailers for movies and TV shows that you may want to add to your library in the future. These are downloaded videos, stored in a different Library, and "Trailer - " is prefixed to the title so that you can tell them apart from the actual movie or TV series.
 
 [![CI/CD](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci-cd.yml)
 [![tests](https://img.shields.io/github/actions/workflow/status/robertsinfosec/coming-attractions/ci-cd.yml?branch=main&label=tests&logo=githubactions&logoColor=white)](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci-cd.yml)
@@ -17,38 +24,83 @@ A professional Python application for fetching, managing, and maintaining upcomi
 [![pull requests](https://img.shields.io/github/issues-pr/robertsinfosec/coming-attractions?label=pull%20requests&logo=github&logoColor=white&color=0%20open)](https://github.com/robertsinfosec/coming-attractions/pulls)
 [![dependabot](https://img.shields.io/badge/dependabot-enabled-025E8C?logo=dependabot&logoColor=white)](https://github.com/robertsinfosec/coming-attractions/security/dependabot)
 
+## Example in Jellyfin
+
+This is configured to download theatrical trailers and also streaming trailers (from Netflix, Prime Video, Disney+, HBO Max, Hulu, Apple TV+, Paramount+, Peacock, Showtime, and Starz) for the next 180 days and the past 90 days. Trailers are stored in separate libraries in Jellyfin. From there, I set up libraries for "Streaming Trailers" and "Theatrical Trailers". These would be additional libraries alongside your existing "Movies" and "TV Series" libraries.
+
+> ![alt text](docs/images/preview-library.png)
+
+In Jellyfin, these are two additional "Libraries", which also support the "Recently added in..." view for both:
+
+> ![alt text](docs/images/preview-main.png)
+
+Now, this isn't perfect, for a few reasons. First, for upcoming movies and TV shows, sometimes the metadata is incomplete or missing. Also, the example here is Jellyfin, and it has no concept of "coming attractions". So, as you can see below, the trailer will look like a regular movie or TV show.
+
+Confusingly, button "1" below plays the actual movie trailer that this project downloaded. The title though, has been prefixed with "Trailer - " to help distinguish it from the actual movie or TV show. Button "2" is from Trailerfin, because it found the *streaming* trailer for this particular title on YouTube. So, button "2" plays a potentially different trailer than the one that was downloaded.
+
+> ![alt text](docs/images/preview-item.png)
+
+With that said, this is still a very useful and automated way to see what is coming soon to threaters, and also what is coming soon to the streaming services that this supports, which are (as of Jan 2026):
+
+- Amazon Prime
+- Apple TV+
+- Disney+
+- HBO Max
+- Hulu
+- Netflix
+- Paramount+
+- Peacock
+- Showtime
+- Starz
+
+### ⚙️ About "Automation"
+
+The idea behind this being "automated" is that you just need to set this up once, and then it will keep your trailer libraries up to date in the background - forever.
+
+- **Always Getting New Ones:** this will automatically keep pulling in new trailers as they are announced and available on TMDb. Mine is configured to run every 12 hours. So, some days there are no trailers, other days there are several new ones - but you get the latest ones pretty quickly after being announced.
+
+- **Always Pruning Old Ones:** old trailers are automatically pruned based on your retention settings (default: 2 years). This is settable. This makes sure that your trailer libraries don't grow out of control over time, and it also keeps your "Coming Attractions" relevant. Again, if you now have that movie or TV series, then Trailerfin is the better tool to directly associate the trailer with your existing library item.
+
+This means at any given time, you will have movie and streaming service trailers for upcoming titles, and you'll have older ones up to two years old before they fall off.
+
 ## Features
 
-✨ **Dual Mode Operation**
+### ✨ Dual Mode Operation
+
 - **Theatrical Mode**: Upcoming, now playing, and popular movies from TMDb feeds
 - **Streaming Mode**: Discover movies and TV shows from specific streaming providers
 - **Both Mode**: Run theatrical and streaming fetches together
 
-🎬 **Smart Trailer Selection**
+### 🎬 Smart Trailer Selection
+
 - Prioritizes official trailers over teasers
 - One trailer per title (highest quality)
 - Configurable video quality (up to 4K)
 - Automatic video+audio merge via ffmpeg
 
-🗄️ **Intelligent Management**
+### 🗄️ Intelligent Management
+
 - Configurable retention policies (default: 2 years)
 - Automatic cleanup of old trailers
 - Tracks removed trailers to prevent re-downloading
 - Atomic file operations for reliability
 
-🏷️ **Jellyfin Integration**
+### 🏷️ Jellyfin Integration
+
 - Automatic "Trailer - " prefix for proper display
 - NFO metadata generation
 - TV show detection with [TV] suffix
 - Compatible with existing Jellyfin libraries
 
-🐳 **Production Ready**
+### 🐳 Production Ready
+
 - Daemon mode with configurable intervals
 - Comprehensive logging (console + file)
 - Dry-run mode for testing
 - Environment variable support
 
-🌍 **Multi-Platform Support**
+### 🌍 Multi-Platform Support
+
 - Works seamlessly on AMD/Intel and ARM processors
 - Native support for Raspberry Pi (all models)
 - Compatible with macOS via Docker Desktop (Intel & Apple Silicon)
@@ -56,7 +108,11 @@ A professional Python application for fetching, managing, and maintaining upcomi
 
 ## Quick Start
 
+Here are two quick ways to get started with Coming Attractions: using Docker Compose (recommended) or installing and running the CLI directly.
+
 ### Docker Compose (Recommended)
+
+If you run Jellyfin, Emby, or Plex as a Docker Compose service, this is the easiest way to get started. Just add the following service to your existing `docker-compose.yml`, or create a new one. It doesn't need any ports exposed, you just need to point to the root of the folder where you want trailers stored.
 
 ```yaml
 version: '3.8'
@@ -84,6 +140,8 @@ services:
 
 ### Standalone CLI
 
+If you want to install and run the CLI directly on your system, follow these steps:
+
 ```bash
 # Install from src directory
 pip install -e src/
@@ -110,6 +168,8 @@ coming-attractions daemon --interval 12h
 ```
 
 ## Commands
+
+Below are the main commands available in the CLI.
 
 ### `fetch` - Download Trailers
 
@@ -187,7 +247,9 @@ coming-attractions prune --retention-years 2 --force
 
 ### `fix-titles` - Add Trailer Prefix
 
-Add "Trailer - " prefix to titles in NFO files.
+Add "Trailer - " prefix to titles in NFO files. This is because if you have a movie in your library called "Super Great Movie" that came out a few months ago, this tool will likely pick up the trailer for it as well. Then, when you search for "Super Great Movie" in Jellyfin for example, it will show you *BOTH* the actual movie and the trailer, and you won't be able to tell them apart.
+
+To fix this, this command goes through all NFO files in the specified directory and adds "Trailer - " to the start of the `<title>` field. So now, when you search for "Super Great Movie", you'll see the actual movie, and then the trailer will be listed as "Trailer - Super Great Movie", making it easy to distinguish between the two.
 
 ```bash
 coming-attractions fix-titles [OPTIONS]
@@ -270,7 +332,7 @@ All CLI options can be set via environment variables:
 | `STREAMING_DIR`         | Streaming trailers directory            | `./streaming`                      |
 | `REMOVED_FILE`          | Removed trailers tracking file          | `./.trailer-removed.txt`           |
 | `MEDIA_TYPES`           | Streaming media types (movie,tv)        | `movie,tv`                         |
-| `WATCH_PROVIDERS`       | Streaming provider IDs                  | `8,9,337,384,15,350,531,386,37,43` |
+| `WATCH_PROVIDERS`       | Streaming provider IDs (see below)      | `8,9,337,384,15,350,531,386,37,43` |
 | `WATCH_REGION`          | Streaming region                        | `US`                               |
 | `DRY_RUN`               | Enable dry-run mode                     | `0`                                |
 | `DEBUG`                 | Enable debug logging                    | `0`                                |
@@ -292,22 +354,30 @@ Get your free API key from [TMDb](https://www.themoviedb.org/settings/api):
 ### Streaming Providers
 
 Default providers (major US platforms):
-- Netflix (8)
-- Prime Video (9)
-- Disney+ (337)
-- HBO Max (384)
-- Hulu (15)
-- Apple TV+ (350)
-- Paramount+ (531)
-- Peacock (386)
-- Showtime (37)
-- Starz (43)
+
+| Provider    | TMDb ID |
+| ----------- | ------- |
+| Netflix     | 8       |
+| Prime Video | 9       |
+| Disney+     | 337     |
+| HBO Max     | 384     |
+| Hulu        | 15      |
+| Apple TV+   | 350     |
+| Paramount+  | 531     |
+| Peacock     | 386     |
+| Showtime    | 37      |
+| Starz       | 43      |
 
 Find provider IDs: `https://api.themoviedb.org/3/watch/providers/movie?api_key=YOUR_KEY`
 
 ### Jellyfin Integration
 
-1. **Create trailer libraries:**
+Below are the steps to set up Coming Attractions trailers in Jellyfin, for example:
+
+#### 1. Create trailer libraries
+
+You just need the parent directory where trailers are stored. For example, and the movie folders will be created automatically underneath.
+
    ```
    /data/trailers/
    ├── theatrical/
@@ -320,17 +390,19 @@ Find provider IDs: `https://api.themoviedb.org/3/watch/providers/movie?api_key=Y
            └── movie.nfo
    ```
 
-2. **Add libraries in Jellyfin:**
+#### 2. Add libraries in Jellyfin
+
+Next, add the new libraries in Jellyfin:
+
    - Type: "Movies"
    - Path: `/data/trailers/theatrical`
    - Content type: "Movies"
    - Enable "Trailers" metadata provider
-
-3. **Configure trailer display:**
-   - Settings → Playback → "Play trailers before movies"
-   - Choose "From trailers folder"
+   - Repeat for `/data/trailers/streaming`
 
 ## Output Format
+
+Below is an example of console output when running the `fetch` command.
 
 ### Console Output
 
@@ -361,6 +433,8 @@ Find provider IDs: `https://api.themoviedb.org/3/watch/providers/movie?api_key=Y
 
 ### Log Prefixes
 
+Below are the log prefixes used in console and log file output:
+
 - `[*]` - Informational (cyan)
 - `[+]` - Success (green)
 - `[-]` - Error (red)
@@ -368,7 +442,14 @@ Find provider IDs: `https://api.themoviedb.org/3/watch/providers/movie?api_key=Y
 
 ## Development
 
+Below are instructions for setting up a development environment, running tests, and building the Docker image locally.
+
+> [!TIP]
+> This project uses VS Code "Dev Containers". So, instead of messing up your workstation with all of the dependencies, VS Code opens a container, installs everything there, and you just work out of that isolated environment. See the `.devcontainer` folder for details.
+
 ### Setup
+
+Again, using VS Code Dev Containers is the easiest way to get started. Just open this project in VS Code, and it will prompt you to open in a container. Otherwise, follow these steps:
 
 ```bash
 # Clone repository
@@ -387,6 +468,8 @@ pytest --cov=coming_attractions
 
 ### Running Tests
 
+Below are some common `pytest` commands for running tests.
+
 ```bash
 # All tests
 pytest
@@ -402,6 +485,8 @@ pytest -v
 ```
 
 ### Building Docker Image
+
+For the Docker image, you can build it locally as follows:
 
 ```bash
 # Build locally
@@ -419,30 +504,39 @@ docker run --rm \
 
 ## Troubleshooting
 
+Below are some common issues and how to resolve them.
+
 ### Common Issues
 
-**"TMDB_API_KEY is required"**
+#### "TMDB_API_KEY is required"
+
+Note that a TMDb API key is required to use this tool. You get a free key from [TMDb](https://www.themoviedb.org/settings/api), and instructions are [here](https://developer.themoviedb.org/docs/getting-started). Then, you provide that API key either as an environment variable or via the command line.
+
 - Set environment variable: `export TMDB_API_KEY=your_key`
 - Or pass via CLI: `--api-key your_key`
 
-**"Directory is not writable"**
+#### "Directory is not writable"
+
 - Check permissions on output directory
 - Docker: Ensure volume mount has correct permissions
 - Try: `chmod 777 /data/trailers`
 
-**"Download failed"**
+#### "Download failed"
+
 - Check internet connectivity
 - Verify yt-dlp is installed: `yt-dlp --version`
 - Check YouTube URL is accessible
 - Enable debug mode: `--debug`
 
-**"No trailers found"**
+#### "No trailers found"
+
 - Check date window settings (--days-ahead, --days-back)
 - Verify region code (--region US)
 - Enable debug to see API responses: `--debug`
 - Check TMDb API status
 
-**Jellyfin not showing trailers**
+#### "Jellyfin not showing trailers"
+
 - Run `fix-titles` command to add "Trailer - " prefix
 - Check NFO files contain correct metadata
 - Refresh library metadata in Jellyfin
@@ -533,6 +627,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## Support
 
 - 🐛 [Report bugs](https://github.com/robertsinfosec/coming-attractions/issues)
+- :lock: [Report Security Vulnerabilities](https://github.com/robertsinfosec/coming-attractions/security)
 - 💡 [Request features](https://github.com/robertsinfosec/coming-attractions/issues)
 - 📖 [Documentation](https://github.com/robertsinfosec/coming-attractions)
 - 💬 [Discussions](https://github.com/robertsinfosec/coming-attractions/discussions)
