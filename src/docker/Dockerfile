@@ -1,7 +1,14 @@
 # Multi-stage build for coming-attractions
 FROM python:3.14-slim as builder
 
-# Install system dependencies
+# Metadata labels
+LABEL org.opencontainers.image.title="Coming Attractions" \
+      org.opencontainers.image.description="Automated movie trailer fetcher and manager for Plex/Jellyfin. Downloads trailers from TMDb/YouTube with configurable retention policies." \
+      org.opencontainers.image.vendor="robertsinfosec" \
+      org.opencontainers.image.source="https://github.com/robertsinfosec/coming-attractions" \
+      org.opencontainers.image.licenses="MIT"
+
+# Install system dependencies in single layer
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     ffmpeg \
@@ -14,7 +21,10 @@ WORKDIR /app
 # Copy package files (from src/ directory in build context)
 COPY src/requirements.txt .
 COPY src/setup.py .
-RUN pip install --no-cache-dir --upgrade pip && \
+
+# Install Python dependencies with wheel support for faster builds
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-cache-dir --upgrade pip wheel && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copy application code

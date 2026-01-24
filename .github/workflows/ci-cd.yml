@@ -202,6 +202,10 @@ jobs:
             type=semver,pattern={{major}}
             type=raw,value=${{ steps.datetime.outputs.version }},enable={{is_default_branch}}
             type=raw,value=latest,enable={{is_default_branch}}
+          labels: |
+            org.opencontainers.image.title=Coming Attractions
+            org.opencontainers.image.description=Automated movie trailer fetcher and manager for Plex/Jellyfin. Downloads trailers from TMDb/YouTube with configurable retention policies.
+            org.opencontainers.image.vendor=robertsinfosec
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
