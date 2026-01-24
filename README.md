@@ -9,10 +9,9 @@ A professional Python application for fetching, managing, and maintaining upcomi
 [![coverage](https://codecov.io/gh/robertsinfosec/coming-attractions/branch/main/graph/badge.svg)](https://codecov.io/gh/robertsinfosec/coming-attractions)
 [![CodeQL](https://github.com/robertsinfosec/coming-attractions/actions/workflows/security.yml/badge.svg?branch=main)](https://github.com/robertsinfosec/coming-attractions/actions/workflows/security.yml)
 [![Docker Build](https://github.com/robertsinfosec/coming-attractions/actions/workflows/build.yml/badge.svg)](https://github.com/robertsinfosec/coming-attractions/actions/workflows/build.yml)
+[![ghcr.io](https://img.shields.io/badge/ghcr.io-published-blue?logo=docker&logoColor=white)](https://github.com/robertsinfosec/coming-attractions/pkgs/container/coming-attractions)
 [![python](https://img.shields.io/badge/python-3.11%2B-blue?logo=python&logoColor=white)](https://github.com/robertsinfosec/coming-attractions/blob/main/src/setup.py)
 [![license](https://img.shields.io/github/license/robertsinfosec/coming-attractions?label=license)](https://github.com/robertsinfosec/coming-attractions/blob/main/LICENSE)
-[![release](https://img.shields.io/github/v/release/robertsinfosec/coming-attractions?display_name=tag&label=release)](https://github.com/robertsinfosec/coming-attractions/releases)
-[![Docker Pulls](https://img.shields.io/docker/pulls/robertsinfosec/coming-attractions?logo=docker&logoColor=white)](https://hub.docker.com/r/robertsinfosec/coming-attractions)
 [![last commit](https://img.shields.io/github/last-commit/robertsinfosec/coming-attractions?label=last%20commit)](https://github.com/robertsinfosec/coming-attractions/commits/main)
 [![issues](https://img.shields.io/github/issues/robertsinfosec/coming-attractions?label=issues)](https://github.com/robertsinfosec/coming-attractions/issues)
 [![PRs](https://img.shields.io/github/issues-pr/robertsinfosec/coming-attractions?label=pull%20requests)](https://github.com/robertsinfosec/coming-attractions/pulls)
@@ -44,11 +43,16 @@ A professional Python application for fetching, managing, and maintaining upcomi
 - Compatible with existing Jellyfin libraries
 
 🐳 **Production Ready**
-- Multi-arch Docker images (amd64, arm64)
 - Daemon mode with configurable intervals
 - Comprehensive logging (console + file)
 - Dry-run mode for testing
 - Environment variable support
+
+🌍 **Multi-Platform Support**
+- Works seamlessly on AMD/Intel and ARM processors
+- Native support for Raspberry Pi (all models)
+- Compatible with macOS via Docker Desktop (Intel & Apple Silicon)
+- Automatic architecture detection - no configuration needed
 
 ## Quick Start
 
