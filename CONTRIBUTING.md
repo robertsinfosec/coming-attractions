@@ -1,5 +1,7 @@
 # Contributing to Coming Attractions
 
+**Navigation**: [Home](README.md) > Contributing
+
 Thank you for your interest in contributing to Coming Attractions! This document provides guidelines and instructions for contributing.
 
 ## Table of Contents
@@ -31,37 +33,19 @@ This project follows a code of conduct that all contributors are expected to uph
 
 ## Development Setup
 
-### Using VS Code Dev Container (Recommended)
+This project uses **VS Code Dev Containers** for a consistent development environment.
 
-The project includes a Dev Container configuration for a consistent development environment:
+### Quick Start
 
-1. Install [VS Code](https://code.visualstudio.com/) and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-2. Open the project in VS Code
-3. When prompted, click "Reopen in Container"
-4. The container will build and set up the development environment automatically
+Steps to get started:
 
-### Manual Setup
+1. Install [VS Code](https://code.visualstudio.com/) and [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+2. Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+3. Clone and open the repository in VS Code
+4. Click **Reopen in Container** when prompted
+5. Wait for setup to complete (2-5 minutes first time)
 
-If you prefer not to use Dev Containers:
-
-1. **Create a virtual environment**:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-2. **Install development dependencies**:
-   ```bash
-   make install-dev
-   # Or manually:
-   pip install -e ".[dev]"
-   ```
-
-3. **Verify installation**:
-   ```bash
-   coming-attractions --help
-   pytest --version
-   ```
+**For detailed setup instructions**, including manual setup without Dev Containers, see **[Developer Setup Guide](docs/dev/SETUP.md)**.
 
 ## Making Changes
 
@@ -102,53 +86,23 @@ docs: Update Docker deployment instructions
 
 ## Testing
 
-### Running Tests
+All code changes require tests with 80%+ coverage.
+
+**Run tests:**
 
 ```bash
-# All tests
-make test
-
-# Unit tests only
-make test-unit
-
-# With coverage
-make test-cov
+cd src/
+pytest
+pytest --cov=coming_attractions --cov-report=term-missing
 ```
 
-### Writing Tests
-
-1. Place tests in `tests/` directory
-2. Name test files `test_*.py`
-3. Use descriptive test names: `test_fetch_handles_missing_trailer`
-4. Use fixtures from `conftest.py`
-5. Aim for >80% code coverage
-
-Example test:
-
-```python
-def test_sanitize_folder_name_removes_invalid_chars(utils_module):
-    """Test that invalid filesystem characters are removed."""
-    result = utils_module.sanitize_folder_name("Movie: The Title!")
-    assert result == "Movie The Title"
-    assert "/" not in result
-```
-
-### Running Specific Tests
-
-```bash
-# Single test file
-pytest tests/test_utils.py
-
-# Single test function
-pytest tests/test_utils.py::test_sanitize_folder_name
-
-# With verbose output
-pytest -v tests/
-```
+**For detailed testing guidelines**, see **[Testing Guide](docs/dev/TESTING.md)**.
 
 ## Pull Request Process
 
 ### Before Submitting
+
+Steps to take before creating a pull request:
 
 1. **Update your branch** with latest upstream:
    ```bash
@@ -185,99 +139,31 @@ pytest -v tests/
 
 ### PR Review Process
 
+What happens after you submit:
+
 - Maintainers will review your PR
 - Address any requested changes
 - Once approved, a maintainer will merge
 
 ## Coding Standards
 
-### Python Style
+Follow these standards strictly:
 
-- Follow [PEP 8](https://pep8.org/)
-- Use type hints for function signatures
-- Maximum line length: 100 characters
-- Use descriptive variable names
+- **PEP 8** compliance (line length: 100 characters)
+- **Type hints** required for all function signatures
+- **Docstrings** required (Google style)
+- **No technical debt** - refactor as you go
 
-### Code Organization
-
-```python
-# Order of imports:
-# 1. Standard library
-# 2. Third-party packages
-# 3. Local modules
-
-import sys
-from pathlib import Path
-from typing import List, Optional
-
-import click
-from pydantic import BaseModel
-
-from coming_attractions.logger import Logger
-```
-
-### Documentation
-
-- Add docstrings to all public functions/classes
-- Use Google-style docstrings:
-
-```python
-def fetch_trailer(api_key: str, movie_id: int) -> Optional[str]:
-    """Fetch trailer URL for a movie.
-    
-    Args:
-        api_key: TMDb API key
-        movie_id: TMDb movie ID
-        
-    Returns:
-        Trailer URL if found, None otherwise
-        
-    Raises:
-        ValueError: If api_key is invalid
-    """
-    pass
-```
-
-### Error Handling
-
-- Use specific exception types
-- Provide helpful error messages
-- Clean up resources (use context managers)
-
-```python
-try:
-    with open(file_path) as f:
-        data = f.read()
-except FileNotFoundError:
-    logger.error(f"File not found: {file_path}")
-    return None
-except PermissionError:
-    logger.error(f"Permission denied: {file_path}")
-    return None
-```
-
-## Project Structure
-
-```
-coming-attractions/
-├── src/
-│   └── coming_attractions/      # Main package
-│       ├── cli.py             # CLI interface
-│       ├── fetcher.py         # Fetch logic
-│       ├── pruner.py          # Prune logic
-│       └── ...
-├── tests/                     # Test suite
-├── docs/                      # Documentation (if any)
-├── Dockerfile                 # Docker image
-├── docker-compose.yml         # Docker Compose example
-└── setup.py                   # Package configuration
-```
+**For complete coding standards**, see **[Style Guide](STYLE_GUIDE.md)** and **[Architecture Guide](docs/dev/ARCHITECTURE.md)**.
 
 ## Getting Help
 
-- **Issues**: Check [existing issues](https://github.com/robertsinfosec/coming-attractions/issues)
-- **Discussions**: Start a discussion for questions
-- **Documentation**: Read the [README](README.md) and [MIGRATION](MIGRATION.md) guide
+- 📖 **[Developer Setup Guide](docs/dev/SETUP.md)** - Environment setup
+- 🧪 **[Testing Guide](docs/dev/TESTING.md)** - Writing and running tests
+- 🏗️ **[Architecture Guide](docs/dev/ARCHITECTURE.md)** - Project structure
+- 📝 **[Style Guide](STYLE_GUIDE.md)** - Code quality standards
+- 🐛 **[Issues](https://github.com/robertsinfosec/coming-attractions/issues)** - Bug reports
+- 💬 **[Discussions](https://github.com/robertsinfosec/coming-attractions/discussions)** - Questions
 
 ## License
 

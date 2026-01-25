@@ -136,6 +136,46 @@ class MyConfig(BaseModel):
 - ❌ Don't write functions longer than 50 lines
 - ❌ Don't exceed 100 characters per line
 
+## Markdown Documentation Standards
+
+All markdown files must follow professional formatting standards:
+
+### Required Practices
+
+1. **Use real headers, not bold text**: Never use `**Header:**` as a simulated section header. Use proper `####` markdown headers instead.
+
+2. **Add section descriptions**: Every header needs at least one sentence explaining what the section contains.
+
+3. **Blank lines everywhere**: All headings, code blocks, lists, and tables MUST have blank lines above and below.
+
+4. **No horizontal rules**: Never use `---` separators. Headers provide sufficient visual separation.
+
+5. **No emoji in headers**: Keep section headers professional without decorative emoji.
+
+6. **Use GitHub admonitions**: For callouts, use `> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, etc.
+
+### Examples
+
+**CORRECT:**
+```markdown
+### Configuration Options
+
+The following environment variables control behavior.
+
+| Variable | Description |
+...
+```
+
+**INCORRECT:**
+```markdown
+### Configuration Options
+---
+**Environment Variables:**
+...
+```
+
+See STYLE_GUIDE.md for complete documentation standards.
+
 ## Git Commit Messages
 
 Format:

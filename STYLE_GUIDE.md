@@ -1,5 +1,7 @@
 # Style Guide
 
+**Navigation**: [Home](README.md) > [Contributing](CONTRIBUTING.md) > Style Guide
+
 This document defines the coding standards and best practices for the Coming Attractions project.
 
 ## Table of Contents
@@ -14,6 +16,9 @@ This document defines the coding standards and best practices for the Coming Att
 ## General Principles
 
 ### Code Quality
+
+Core quality standards for all contributions:
+
 - **Zero tolerance for technical debt** - Refactor as you go
 - **No shortcuts** - Do it right the first time
 - **Test everything** - Minimum 80% coverage
@@ -21,6 +26,9 @@ This document defines the coding standards and best practices for the Coming Att
 - **Review everything** - No code merges without review
 
 ### Best Practices
+
+Core development practices to follow:
+
 - **DRY (Don't Repeat Yourself)** - Extract common logic
 - **SOLID principles** - Single responsibility, Open/closed, etc.
 - **KISS (Keep It Simple)** - Simplest solution that works
@@ -30,7 +38,7 @@ This document defines the coding standards and best practices for the Coming Att
 
 ### PEP 8 Compliance
 
-We **strictly follow PEP 8**. Key points:
+We strictly follow PEP 8 standards. Key points:
 
 #### Naming Conventions
 ```python
@@ -96,7 +104,9 @@ from coming_attractions.models import Trailer
 
 ### Type Hints
 
-**Required for all function signatures:**
+All function signatures must include type hints for parameters and return values.
+
+#### Example with Type Hints
 
 ```python
 from typing import Optional, List, Dict, Any
@@ -121,7 +131,9 @@ def fetch_data(
 
 ### Docstrings
 
-**Google-style docstrings required for all public functions/classes:**
+Use Google-style docstrings for all public functions and classes.
+
+#### Example with Complete Docstring
 
 ```python
 def process_trailer(
@@ -156,6 +168,10 @@ def process_trailer(
 
 ### Error Handling
 
+Use specific exception types and provide meaningful error messages.
+
+#### Correct Error Handling
+
 ```python
 # Good - Specific exceptions
 try:
@@ -169,7 +185,11 @@ except requests.Timeout:
 except Exception as e:
     logger.error(f"Unexpected error: {e}")
     raise
+```
 
+#### Incorrect Error Handling
+
+```python
 # Bad - Bare except
 try:
     data = fetch_api_data(url)
@@ -179,7 +199,9 @@ except:  # ❌ Never do this!
 
 ### File Operations
 
-**Always use atomic operations:**
+Always use atomic operations for file writes to prevent data corruption.
+
+#### Atomic Write Pattern
 
 ```python
 from pathlib import Path
@@ -203,7 +225,9 @@ def write_file_atomically(file_path: Path, content: str) -> None:
 
 ### Logging
 
-**Use centralized Logger, never print():**
+Use the centralized Logger class instead of print statements.
+
+#### Correct Logging
 
 ```python
 from coming_attractions.logger import Logger, LogLevel
@@ -215,14 +239,20 @@ logger.info("Processing 10 items")
 logger.success("Download completed")
 logger.warning("API rate limit approaching")
 logger.error("Failed to parse response")
+```
 
+#### Incorrect Logging
+
+```python
 # Bad
 print("Processing items")  # ❌ Never use print()
 ```
 
 ### Code Organization
 
-**Functions should be focused and concise:**
+Write focused functions with single responsibilities.
+
+#### Good Function Example
 
 ```python
 # Good - Single responsibility, ~20 lines
@@ -235,7 +265,11 @@ def validate_api_key(api_key: str) -> bool:
     if not api_key.isalnum():
         return False
     return True
+```
 
+#### Bad Function Example
+
+```python
 # Bad - Too long, multiple responsibilities
 def process_everything(data):  # ❌ 100+ line function
     # Parse data
@@ -285,12 +319,204 @@ docs/                    # Documentation
 
 ### File Naming
 
+Naming conventions for different file types:
+
 - **Python modules**: `snake_case.py` (e.g., `trailer_fetcher.py`)
 - **Test files**: `test_*.py` (e.g., `test_utils.py`)
 - **Documentation**: `UPPERCASE.md` for root, `Title_Case.md` for docs/
 - **Configuration**: Lowercase with extension (e.g., `pytest.ini`, `.dockerignore`)
 
 ## Documentation
+
+All documentation must follow consistent markdown standards for professional appearance and maintainability.
+
+### Markdown Standards
+
+Follow these standards for all markdown documentation in the repository.
+
+#### Section Headers
+
+Use proper markdown headers, never simulate them with bold text.
+
+##### Correct Example
+
+```markdown
+#### Benefits
+
+The following advantages apply:
+```
+
+##### Incorrect Example
+
+```markdown
+**Benefits:**
+- List items...
+```
+
+> [!IMPORTANT]
+> **Rule - Real Headers**: If content is important enough to stand out, it deserves a real header (`####`), not bolded text.
+
+#### Section Descriptions
+
+Every section header must have at least one sentence explaining what the section contains.
+
+##### Correct Example
+
+```markdown
+### Configuration Options
+
+The following environment variables control application behavior.
+```
+
+##### Incorrect Example
+
+```markdown
+### Configuration Options
+
+| Variable | Description |
+...
+```
+
+> [!IMPORTANT]
+> **Rule - Context First**: Readers need context before diving into details. Every header must have explanatory text.
+
+#### Blank Lines
+
+All markdown elements MUST have blank lines above and below them for proper rendering.
+
+##### Elements Requiring Blank Lines
+
+- Headings
+- Code blocks
+- Lists
+- Tables
+- Block quotes
+- Horizontal rules (if absolutely necessary)
+
+##### Correct Example
+
+```markdown
+This is a paragraph.
+
+## Heading
+
+This is another paragraph.
+
+```bash
+code here
+```
+
+And more text.
+```
+
+##### Incorrect Example
+
+```markdown
+This is a paragraph.
+## Heading
+More text with no spacing.
+```
+
+> [!IMPORTANT]
+> **Rule - Blank Lines**: GitHub-Flavored Markdown requires blank lines above and below all structural elements for proper rendering.
+
+#### No Horizontal Rules
+
+Do NOT use `---` horizontal rules in documentation.
+
+Section headers already create visual separation when rendered. Adding `---` creates unnecessary double lines.
+
+##### Incorrect Example
+
+```markdown
+## Section One
+
+Content here.
+
+---
+
+## Section Two
+```
+
+##### Correct Example
+
+```markdown
+## Section One
+
+Content here.
+
+## Section Two
+```
+
+> [!IMPORTANT]
+> **Rule - No HRs**: Headers provide sufficient visual separation. Horizontal rules create double lines and visual clutter.
+
+#### Emoji in Headers
+
+Do NOT use emoji in section headers for professional appearance.
+
+##### Correct Example
+
+```markdown
+### Production Ready
+
+Built for reliable operation in production environments.
+```
+
+##### Incorrect Example
+
+```markdown
+### 🐳 Production Ready
+```
+
+> [!IMPORTANT]
+> **Rule - No Emoji**: Professional documentation avoids decorative emoji in structural elements like headers.
+
+#### List Item Descriptors
+
+Bolded list items with colons are acceptable for describing options or examples within content.
+
+##### Correct Example
+
+```markdown
+- **Required:** TMDb API key for authentication
+- **Optional:** Max video height (default: 1080p)
+```
+
+##### Example Code Usage
+
+```bash
+command --option value
+```
+
+> [!NOTE]
+> **Exception**: Bolded descriptors in lists (like `**Required:**`) are content labels, not section headers, and are acceptable.
+
+#### GitHub Admonitions
+
+Use GitHub-Flavored Markdown admonitions to highlight important information without breaking document flow.
+
+##### Available Admonition Types
+
+```markdown
+> [!NOTE]
+> Useful information that users should know.
+
+> [!TIP]
+> Helpful advice for doing things better.
+
+> [!IMPORTANT]
+> Key information users need to know.
+
+> [!WARNING]
+> Urgent info that needs immediate attention.
+
+> [!CAUTION]
+> Advises about risks or negative outcomes.
+```
+
+> [!TIP]
+> **Best Practice**: Use admonitions to emphasize rules, warnings, or key concepts without adding extra headers.
 
 ### README Structure
 
@@ -301,6 +527,8 @@ Every significant directory should have a README explaining:
 - How to run/test the code
 
 ### Code Comments
+
+Explain WHY, not WHAT:
 
 ```python
 # Good - Explain WHY, not WHAT
@@ -348,7 +576,8 @@ class TrailerFetcher:
 
 ### Commit Messages
 
-**Format:**
+Format for commit messages:
+
 ```
 type: Short description (50 chars max)
 
@@ -360,7 +589,10 @@ Explain WHY the change was made, not what was changed
 - Reference issues: Fixes #123, Related to #456
 ```
 
-**Types:**
+#### Commit Types
+
+Available commit types:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation only
@@ -370,7 +602,10 @@ Explain WHY the change was made, not what was changed
 - `chore`: Maintenance (dependencies, CI, etc.)
 - `perf`: Performance improvement
 
-**Examples:**
+#### Commit Examples
+
+Example commit messages:
+
 ```
 feat: Add support for custom trailer quality settings
 
@@ -393,6 +628,8 @@ Fixes #67
 
 ### Branch Naming
 
+Naming convention for branches:
+
 ```
 feature/add-quality-settings
 fix/pruner-missing-dates
@@ -404,6 +641,8 @@ refactor/extract-api-client
 
 ### Never Commit Secrets
 
+Always use environment variables:
+
 ```python
 # Good - Use environment variables
 api_key = os.getenv("TMDB_API_KEY")
@@ -413,6 +652,8 @@ api_key = "abc123..."  # ❌ NEVER!
 ```
 
 ### Input Validation
+
+Use Pydantic for validation:
 
 ```python
 from pydantic import BaseModel, Field, field_validator
@@ -431,6 +672,8 @@ class Config(BaseModel):
 ```
 
 ### Path Sanitization
+
+Always sanitize user-provided paths:
 
 ```python
 from unicodedata import normalize
@@ -460,6 +703,8 @@ def sanitize_folder_name(name: str) -> str:
 
 ### Test Structure
 
+Organize tests into classes:
+
 ```python
 import pytest
 from pathlib import Path
@@ -487,6 +732,8 @@ class TestSanitizeFolderName:
 ```
 
 ### Test Coverage
+
+Coverage requirements and best practices:
 
 - **Minimum 80% coverage** for all new code
 - **Test both success and failure paths**
@@ -529,6 +776,8 @@ Before submitting code for review:
 
 ### Recommended Tools
 
+Tools that can help maintain code quality:
+
 - **Black**: Code formatter (optional, but helpful)
 - **ruff**: Fast linter for Python
 - **mypy**: Static type checker
@@ -536,6 +785,8 @@ Before submitting code for review:
 - **pre-commit**: Git hooks for automation
 
 ### Running Checks
+
+Commands for code quality checks:
 
 ```bash
 # Format code
@@ -556,7 +807,8 @@ make lint format test
 
 ## Questions?
 
-When in doubt:
+When in doubt, follow this hierarchy:
+
 1. Check this style guide
 2. Look at existing code for patterns
 3. Ask in PR review

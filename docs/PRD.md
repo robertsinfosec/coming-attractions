@@ -1,13 +1,13 @@
 # Product Requirements Document (PRD)
 
+**Navigation**: [Home](../README.md) > [Documentation](../README.md#documentation) > PRD
+
 ## Coming Attractions - Automated Movie Trailer Management System
 
 **Version**: 1.0  
 **Status**: Active Development  
 **Last Updated**: January 23, 2026  
 **Owner**: robertsinfosec  
-
----
 
 ## Executive Summary
 
@@ -26,8 +26,6 @@ A professional, open-source Python application that:
 - Enforces retention policies to remove outdated trailers
 - Maintains consistent naming and organization
 - Runs as a daemon for hands-off automation
-
----
 
 ## Objectives and Goals
 
@@ -55,9 +53,9 @@ A professional, open-source Python application that:
 - Web UI (CLI and daemon mode sufficient for v1.0)
 - Support for non-YouTube video sources (future enhancement)
 
----
-
 ## User Personas
+
+Target users for this application.
 
 ### Primary: Alex - Home Lab Enthusiast
 
@@ -107,9 +105,9 @@ A professional, open-source Python application that:
 - Hard to troubleshoot in production
 - Can't use existing monitoring infrastructure
 
----
-
 ## Features and Requirements
+
+Detailed feature specifications and acceptance criteria.
 
 ### Must-Have (MVP - v1.0)
 
@@ -242,11 +240,11 @@ A professional, open-source Python application that:
 - FR-X3: Social features (sharing, ratings)
 - FR-X4: Blockchain/NFT integration
 
----
-
 ## Technical Requirements
 
 ### Architecture
+
+High-level system design and technology choices.
 
 **Design Principles**:
 - Modular design (separate concerns: API, download, metadata, CLI)
@@ -256,6 +254,8 @@ A professional, open-source Python application that:
 - Comprehensive logging (debug/info/warning/error levels)
 
 **Technology Stack**:
+
+Core technologies and frameworks used:
 - **Language**: Python 3.11+ (type hints, dataclasses)
 - **CLI Framework**: Click 8.1.7+
 - **Config Validation**: Pydantic 2.5.0+
@@ -266,6 +266,9 @@ A professional, open-source Python application that:
 - **Containerization**: Docker (multi-stage, multi-arch)
 
 **System Architecture**:
+
+Component interaction diagram:
+
 ```
 ┌─────────────────┐
 │   CLI (Click)   │
@@ -331,8 +334,6 @@ A professional, open-source Python application that:
 - **DR-5**: Contributing guidelines
 - **DR-6**: Changelog (semantic versioning)
 
----
-
 ## User Stories
 
 ### Epic 1: Setup and Configuration
@@ -393,9 +394,9 @@ A professional, open-source Python application that:
 **US-5.3**: As a user, I want the container to run as non-root so it's more secure.  
 **AC**: Dockerfile uses non-root user, works with rootless Docker
 
----
-
 ## Dependencies and Integrations
+
+External services and tools required.
 
 ### External APIs
 
@@ -413,6 +414,8 @@ A professional, open-source Python application that:
 
 ### Media Servers (Indirect)
 
+Supported media server platforms:
+
 - **Plex**: Via filesystem monitoring (no direct API)
 - **Jellyfin**: Via filesystem monitoring
 - **Emby**: Via filesystem monitoring
@@ -420,37 +423,41 @@ A professional, open-source Python application that:
 
 ### Development Tools
 
+Tools used for development and CI/CD:
+
 - **GitHub Actions**: CI/CD automation
 - **CodeQL**: Security scanning
 - **Dependabot**: Dependency updates
 - **Docker Hub/GHCR**: Container registry
 
----
-
 ## Risks and Mitigations
+
+Potential risks and how they will be addressed.
 
 ### Technical Risks
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| TMDb API changes | Medium | High | Version API calls, monitor changelogs, retry logic |
-| YouTube blocks yt-dlp | Medium | Critical | Keep yt-dlp updated, consider alternative sources v2.0 |
-| Rate limiting | High | Medium | Respect limits, exponential backoff, queue requests |
-| Disk space exhaustion | Low | Medium | Retention policies, monitoring, user alerts |
-| Data corruption | Low | High | Atomic operations, backups, validation |
+| Risk                  | Likelihood | Impact   | Mitigation                                             |
+| --------------------- | ---------- | -------- | ------------------------------------------------------ |
+| TMDb API changes      | Medium     | High     | Version API calls, monitor changelogs, retry logic     |
+| YouTube blocks yt-dlp | Medium     | Critical | Keep yt-dlp updated, consider alternative sources v2.0 |
+| Rate limiting         | High       | Medium   | Respect limits, exponential backoff, queue requests    |
+| Disk space exhaustion | Low        | Medium   | Retention policies, monitoring, user alerts            |
+| Data corruption       | Low        | High     | Atomic operations, backups, validation                 |
 
 ### Operational Risks
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| User misconfiguration | High | Low | Validation, good defaults, clear error messages |
-| Network failures | High | Low | Retry logic, timeout handling, graceful degradation |
-| Dependency vulnerabilities | Medium | Medium | Dependabot, regular updates, security scanning |
-| Breaking changes in updates | Medium | Medium | Semantic versioning, changelog, migration guides |
+User and deployment-related risks:
 
----
+| Risk                        | Likelihood | Impact | Mitigation                                          |
+| --------------------------- | ---------- | ------ | --------------------------------------------------- |
+| User misconfiguration       | High       | Low    | Validation, good defaults, clear error messages     |
+| Network failures            | High       | Low    | Retry logic, timeout handling, graceful degradation |
+| Dependency vulnerabilities  | Medium     | Medium | Dependabot, regular updates, security scanning      |
+| Breaking changes in updates | Medium     | Medium | Semantic versioning, changelog, migration guides    |
 
 ## Timeline and Milestones
+
+Project phases and release schedule.
 
 ### Phase 1: MVP (Complete)
 
@@ -485,9 +492,9 @@ A professional, open-source Python application that:
 - ⏳ Advanced filtering
 - ⏳ Community feedback integration
 
----
-
 ## Open Questions
+
+Unresolved questions and current answers:
 
 1. **Q**: Should we support authentication for private YouTube playlists?  
    **A**: Defer to v2.0 - complexity not worth it for MVP
@@ -504,17 +511,17 @@ A professional, open-source Python application that:
 5. **Q**: Integration with Sonarr/Radarr?  
    **A**: Future consideration - would require API integration
 
----
-
 ## Approval and Sign-off
+
+Document approval status:
 
 **Document Status**: Draft  
 **Approved By**: TBD  
 **Date**: TBD  
 
----
-
 ## Appendix
+
+Supporting information and references.
 
 ### Glossary
 
@@ -535,6 +542,6 @@ A professional, open-source Python application that:
 
 ### Revision History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | 2026-01-23 | robertsinfosec | Initial PRD creation |
+| Version | Date       | Author         | Changes              |
+| ------- | ---------- | -------------- | -------------------- |
+| 1.0     | 2026-01-23 | robertsinfosec | Initial PRD creation |

@@ -53,7 +53,7 @@ With that said, this is still a very useful and automated way to see what is com
 - Showtime
 - Starz
 
-### ⚙️ About "Automation"
+### About "Automation"
 
 The idea behind this being "automated" is that you just need to set this up once, and then it will keep your trailer libraries up to date in the background - forever.
 
@@ -65,41 +65,43 @@ This means at any given time, you will have movie and streaming service trailers
 
 ## Features
 
-### ✨ Dual Mode Operation
+### Dual Mode Operation
 
 - **Theatrical Mode**: Upcoming, now playing, and popular movies from TMDb feeds
 - **Streaming Mode**: Discover movies and TV shows from specific streaming providers
 - **Both Mode**: Run theatrical and streaming fetches together
 
-### 🎬 Smart Trailer Selection
+### Smart Trailer Selection
 
 - Prioritizes official trailers over teasers
 - One trailer per title (highest quality)
 - Configurable video quality (up to 4K)
 - Automatic video+audio merge via ffmpeg
 
-### 🗄️ Intelligent Management
+### Intelligent Management
 
 - Configurable retention policies (default: 2 years)
 - Automatic cleanup of old trailers
 - Tracks removed trailers to prevent re-downloading
 - Atomic file operations for reliability
 
-### 🏷️ Jellyfin Integration
+### Jellyfin Integration
 
 - Automatic "Trailer - " prefix for proper display
 - NFO metadata generation
 - TV show detection with [TV] suffix
 - Compatible with existing Jellyfin libraries
 
-### 🐳 Production Ready
+### Production Ready
 
 - Daemon mode with configurable intervals
 - Comprehensive logging (console + file)
 - Dry-run mode for testing
 - Environment variable support
 
-### 🌍 Multi-Platform Support
+### Multi-Platform Support
+
+Runs on a wide range of hardware architectures without additional configuration.
 
 - Works seamlessly on AMD/Intel and ARM processors
 - Native support for Raspberry Pi (all models)
@@ -169,7 +171,7 @@ coming-attractions daemon --interval 12h
 
 ## Commands
 
-Below are the main commands available in the CLI.
+The CLI provides four main commands for managing your trailer collection.
 
 ### `fetch` - Download Trailers
 
@@ -193,7 +195,7 @@ Options:
   --log-file TEXT             Log to file [env: LOG_FILE]
 ```
 
-**Examples:**
+#### Examples
 
 ```bash
 # Fetch theatrical trailers for US region
@@ -232,7 +234,7 @@ Options:
   --log-file TEXT             Log to file [env: LOG_FILE]
 ```
 
-**Examples:**
+#### Examples
 
 ```bash
 # Preview what would be removed (dry-run)
@@ -262,7 +264,7 @@ Options:
   --log-file TEXT             Log to file [env: LOG_FILE]
 ```
 
-**Examples:**
+#### Examples
 
 ```bash
 # Fix theatrical titles
@@ -289,7 +291,10 @@ Options:
   --log-file TEXT             Log to file [env: LOG_FILE]
 ```
 
-**Workflow:**
+#### Workflow
+
+The daemon executes the following steps in order:
+
 1. Prune old trailers (retention policy)
 2. Fetch theatrical trailers
 3. **Wait for Jellyfin metadata** (default: 5 min) - Allows Jellyfin to detect new files and generate NFO metadata
@@ -300,7 +305,7 @@ Options:
 8. Sleep for configured interval
 9. Repeat
 
-**Examples:**
+#### Examples
 
 ```bash
 # Run every 12 hours
@@ -342,6 +347,8 @@ All CLI options can be set via environment variables:
 
 ## Configuration
 
+Configure Coming Attractions using environment variables, CLI arguments, or a combination of both.
+
 ### TMDb API Key
 
 Get your free API key from [TMDb](https://www.themoviedb.org/settings/api):
@@ -372,7 +379,7 @@ Find provider IDs: `https://api.themoviedb.org/3/watch/providers/movie?api_key=Y
 
 ### Jellyfin Integration
 
-Below are the steps to set up Coming Attractions trailers in Jellyfin, for example:
+Follow these steps to create separate trailer libraries in Jellyfin.
 
 #### 1. Create trailer libraries
 
@@ -402,7 +409,7 @@ Next, add the new libraries in Jellyfin:
 
 ## Output Format
 
-Below is an example of console output when running the `fetch` command.
+Understand the console output and log formatting used by Coming Attractions.
 
 ### Console Output
 
@@ -433,78 +440,16 @@ Below is an example of console output when running the `fetch` command.
 
 ### Log Prefixes
 
-Below are the log prefixes used in console and log file output:
+Log prefixes used in console and log file output:
 
 - `[*]` - Informational (cyan)
 - `[+]` - Success (green)
 - `[-]` - Error (red)
 - `[!]` - Warning (yellow)
 
-## Development
-
-Below are instructions for setting up a development environment, running tests, and building the Docker image locally.
-
-> [!TIP]
-> This project uses VS Code "Dev Containers". So, instead of messing up your workstation with all of the dependencies, VS Code opens a container, installs everything there, and you just work out of that isolated environment. See the `.devcontainer` folder for details.
-
-### Setup
-
-Again, using VS Code Dev Containers is the easiest way to get started. Just open this project in VS Code, and it will prompt you to open in a container. Otherwise, follow these steps:
-
-```bash
-# Clone repository
-git clone https://github.com/robertsinfosec/coming-attractions.git
-cd coming-attractions
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Install in development mode
-pip install -e .
-
-# Run tests
-pytest --cov=coming_attractions
-```
-
-### Running Tests
-
-Below are some common `pytest` commands for running tests.
-
-```bash
-# All tests
-pytest
-
-# With coverage
-pytest --cov=coming_attractions --cov-report=html
-
-# Specific test file
-pytest tests/test_utils.py
-
-# Verbose
-pytest -v
-```
-
-### Building Docker Image
-
-For the Docker image, you can build it locally as follows:
-
-```bash
-# Build locally
-docker build -t coming-attractions:local .
-
-# Build multi-arch
-docker buildx build --platform linux/amd64,linux/arm64 -t coming-attractions:latest .
-
-# Run locally
-docker run --rm \
-  -e TMDB_API_KEY=your_key \
-  -v $(pwd)/data:/data/trailers \
-  coming-attractions:local fetch --mode theatrical
-```
-
 ## Troubleshooting
 
-Below are some common issues and how to resolve them.
+Common issues and their solutions.
 
 ### Common Issues
 
@@ -574,45 +519,28 @@ coming-attractions fetch --api-key abc123 --dry-run
 coming-attractions prune --retention-years 2 --dry-run
 ```
 
-## Architecture
 
-```
-coming_attractions/
-├── __init__.py           # Package initialization
-├── __main__.py           # Entry point
-├── cli.py                # Click CLI commands
-├── config.py             # Pydantic configuration models
-├── logger.py             # Centralized logging
-├── models.py             # Data classes
-├── utils.py              # Shared utilities
-├── tmdb_client.py        # TMDb API client
-├── youtube_downloader.py # yt-dlp wrapper
-├── fetcher.py            # Trailer fetching logic
-├── pruner.py             # Trailer pruning logic
-└── title_fixer.py        # Title fixing logic
-```
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) and [STYLE_GUIDE.md](STYLE_GUIDE.md) for complete guidelines.
-
-**Quick Start:**
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes following the style guide
-4. Add tests (minimum 80% coverage)
-5. Submit a pull request
 
 ## Documentation
 
-- **[README.md](README.md)** - This file (project overview)
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines
-- **[STYLE_GUIDE.md](STYLE_GUIDE.md)** - Code quality standards (PEP 8)
-- **[CHANGELOG.md](CHANGELOG.md)** - Version history
-- **[docs/PRD.md](docs/PRD.md)** - Product Requirements Document
-- **[docs/MIGRATION.md](docs/MIGRATION.md)** - Migration from old scripts
-- **[docs/QUICKREF.md](docs/QUICKREF.md)** - Quick reference guide
-- **[src/README.md](src/README.md)** - Source directory structure
+### For Users
+
+- **[User Guide](docs/USER_GUIDE.md)** - Complete command reference and usage examples
+- **[Docker Guide](docs/DOCKER.md)** - Docker and Docker Compose deployment
+- **[Jellyfin Integration](docs/JELLYFIN_INTEGRATION.md)** - Setting up trailer libraries in Jellyfin
+
+### For Contributors
+
+- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to this project
+- **[Developer Setup](docs/dev/SETUP.md)** - Development environment setup
+- **[Testing Guide](docs/dev/TESTING.md)** - Writing and running tests
+- **[Architecture Guide](docs/dev/ARCHITECTURE.md)** - Project structure and design
+- **[Style Guide](STYLE_GUIDE.md)** - Code quality standards
+
+### Reference
+
+- **[Changelog](CHANGELOG.md)** - Version history and release notes
+- **[Product Requirements](docs/PRD.md)** - Original product requirements document
 
 ## License
 
@@ -627,11 +555,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## Support
 
 - 🐛 [Report bugs](https://github.com/robertsinfosec/coming-attractions/issues)
-- :lock: [Report Security Vulnerabilities](https://github.com/robertsinfosec/coming-attractions/security)
+- 🔒 [Report Security Vulnerabilities](https://github.com/robertsinfosec/coming-attractions/security)
 - 💡 [Request features](https://github.com/robertsinfosec/coming-attractions/issues)
 - 📖 [Documentation](https://github.com/robertsinfosec/coming-attractions)
 - 💬 [Discussions](https://github.com/robertsinfosec/coming-attractions/discussions)
-
----
 
 ![Alt](https://repobeats.axiom.co/api/embed/b8e996332fcb25fbecb1e9daeccee596a2128a8e.svg "Repobeats analytics image")
