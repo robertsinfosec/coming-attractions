@@ -4,13 +4,6 @@
 
 This project gets upcoming TV and movie trailers from TMDb and YouTube, downloads them, and manages them for use with Jellyfin media servers. It supports both theatrical releases and streaming content from popular providers like Netflix, Prime Video, Disney+, and more.
 
-> [!NOTE]
-> This is different from "[Trailerfin](https://github.com/Pukabyte/trailerfin)". Trailerfin associates the streaming trailer for the movie or TV series that is already in your library. If the stream file is there, then you see Trailer icon for *existing* movies in your library (in Jellyfin, for example):
->
-> > ![alt text](docs/images/example-trailerfin.png)
->  
-> With this Coming Attractions fetches upcoming trailers for movies and TV shows that you may want to add to your library in the future. These are downloaded videos, stored in a different Library, and "Trailer - " is prefixed to the title so that you can tell them apart from the actual movie or TV series.
-
 [![CI/CD](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci-cd.yml)
 [![tests](https://img.shields.io/github/actions/workflow/status/robertsinfosec/coming-attractions/ci-cd.yml?branch=main&label=tests&logo=githubactions&logoColor=white)](https://github.com/robertsinfosec/coming-attractions/actions/workflows/ci-cd.yml)
 [![codecov](https://codecov.io/gh/robertsinfosec/coming-attractions/branch/main/graph/badge.svg?token=80%25)](https://codecov.io/gh/robertsinfosec/coming-attractions)
@@ -23,6 +16,15 @@ This project gets upcoming TV and movie trailers from TMDb and YouTube, download
 [![issues](https://img.shields.io/github/issues/robertsinfosec/coming-attractions?label=issues&logo=github&logoColor=white&color=0%20open)](https://github.com/robertsinfosec/coming-attractions/issues)
 [![pull requests](https://img.shields.io/github/issues-pr/robertsinfosec/coming-attractions?label=pull%20requests&logo=github&logoColor=white&color=0%20open)](https://github.com/robertsinfosec/coming-attractions/pulls)
 [![dependabot](https://img.shields.io/badge/dependabot-enabled-025E8C?logo=dependabot&logoColor=white)](https://github.com/robertsinfosec/coming-attractions/security/dependabot)
+
+<img src="docs/images/coming-attractions-social.png" height="200"/>
+
+> [!NOTE]
+> This is different from "[Trailerfin](https://github.com/Pukabyte/trailerfin)". Trailerfin associates the streaming trailer for the movie or TV series that is already in your library. If the stream file is there, then you see Trailer icon for *existing* movies in your library (in Jellyfin, for example):
+>
+> > ![alt text](docs/images/example-trailerfin.png)
+>  
+> With this Coming Attractions fetches upcoming trailers for movies and TV shows that you may want to add to your library in the future. These are downloaded videos, stored in a different Library, and "Trailer - " is prefixed to the title so that you can tell them apart from the actual movie or TV series.
 
 ## Example in Jellyfin
 
