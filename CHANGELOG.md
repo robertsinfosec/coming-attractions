@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-02-25
+
+### Fixed
+- Updated yt-dlp to version 2026.2.21 to fix YouTube download failures (HTTP 403 errors)
+- Improved error logging in YouTube downloader (errors now shown at WARNING/ERROR level instead of DEBUG)
+
+### Changed
+- Updated ruff to version 0.15.2
+
+## [1.0.0] - 2026-02-25
+
 ### Added
 - Initial release of unified Python application
 - Click-based CLI with four commands: fetch, prune, fix-titles, daemon

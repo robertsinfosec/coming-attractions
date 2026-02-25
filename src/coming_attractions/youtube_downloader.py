@@ -99,11 +99,15 @@ class YouTubeDownloader:
                     )
                     return True
                 else:
-                    self.logger.debug("  Download produced no output file")
+                    error_msg = "  Download produced no output file"
                     if attempt < retries - 1:
-                        time.sleep(2**attempt)
+                        self.logger.warning(error_msg, indent=2)
+                        wait_time = 2**attempt
+                        time.sleep(wait_time)
                         continue
-                    return False
+                    else:
+                        self.logger.error(error_msg, indent=2)
+                        return False
 
             except subprocess.CalledProcessError as e:
                 stderr = e.stderr.strip() if e.stderr else ""
@@ -116,11 +120,16 @@ class YouTubeDownloader:
                         indent=2,
                     )
                     if stderr:
-                        self.logger.debug(f"  Error: {stderr}")
+                        self.logger.warning(f"  Error: {stderr}", indent=2)
                     time.sleep(wait_time)
                 else:
                     # Final attempt failed
-                    self.logger.debug(f"  Download failed: {stderr}")
+                    if stderr:
+                        self.logger.error(f"  Download failed: {stderr}", indent=2)
+                    else:
+                        self.logger.error(
+                            "  Download failed with no error message", indent=2
+                        )
                     return False
 
         return False
