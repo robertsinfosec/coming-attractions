@@ -1,5 +1,5 @@
 # Core dependencies
-requests==2.33.1
+requests==2.34.2
 click==8.3.3
 pydantic==2.13.3
 pydantic-settings==2.14.2
