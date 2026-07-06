@@ -89,7 +89,7 @@ jobs:
           pytest --cov=coming_attractions --cov-report=xml --cov-report=term -v
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           file: src/coverage.xml
           flags: unittests
